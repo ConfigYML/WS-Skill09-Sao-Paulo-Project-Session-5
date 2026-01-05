@@ -192,7 +192,7 @@
                             VerticalTextAlignment="Center"/>
                         <Label
                             x:Name="RaceEventsLabel"
-                            Text="Test"
+                            Text=""
                             Grid.Row="9"
                             Grid.Column="1"
                             VerticalTextAlignment="Center"/>

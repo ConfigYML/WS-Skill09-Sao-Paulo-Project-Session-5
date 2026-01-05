@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.UI.Xaml;
 using Windows.System;
 
@@ -50,6 +51,9 @@ public partial class ManageARunnerPage : ContentPage, IQueryAttributable
             var runner = db.Runners
                 .Include(r => r.CountryCodeNavigation)
                 .Include(r => r.Registrations)
+                .ThenInclude(r => r.RegistrationEvents)
+                .ThenInclude(r => r.Event)
+                .ThenInclude(e => e.EventType)
                 .FirstOrDefault(r => r.RunnerId == runnerId);
             var user = db.Users.FirstOrDefault(u => u.Email == runner.Email);
             var charity = db.Charities.FirstOrDefault(c => c.CharityId == runner.Registrations.First().CharityId);
@@ -63,6 +67,11 @@ public partial class ManageARunnerPage : ContentPage, IQueryAttributable
             CountryLabel.Text = runner.CountryCodeNavigation.CountryName;
             CharityLabel.Text = charity.CharityName;
             TargetRaiseLabel.Text = runner.Registrations.First().SponsorshipTarget.ToString();
+            RacekitLabel.Text = $"Option {runner.Registrations.First().RaceKitOptionId}";
+            foreach(var item in runner.Registrations.First().RegistrationEvents)
+            {
+                RaceEventsLabel.Text = RaceEventsLabel.Text + $"{item.Event.EventType.EventTypeName}\n";
+            }
             
 
 
@@ -81,11 +90,13 @@ public partial class ManageARunnerPage : ContentPage, IQueryAttributable
                 nameLabel.Text = statuses[i].RegistrationStatus1;
                 nameLabel.VerticalOptions = LayoutOptions.Center;
                 nameLabel.FontSize = 22;
+                hor.Children.Add(nameLabel);
 
                 Image icon = new Image();
                 icon.Source = isTicked ? ImageSource.FromFile("tick_icon.png") : ImageSource.FromFile("cross_icon.png");
                 icon.WidthRequest = 80;
                 icon.HeightRequest = 80;
+                hor.Children.Add(icon);
 
                 if (statuses[i].RegistrationStatusId == userStatusId)
                 {
