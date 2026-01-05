@@ -75,7 +75,8 @@ public partial class RunnerPage : ContentPage, IQueryAttributable
     {
         ShellNavigationQueryParameters userData = new ShellNavigationQueryParameters()
         {
-            { "User", user }
+            { "User", user },
+            { "FromManageRunner", false }
         };
         await AppShell.Current.GoToAsync("EditProfilePage", userData);
     }

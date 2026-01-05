@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.UI.Xaml;
+using System.Text;
 using Windows.System;
 
 namespace Session_5_Dennis_Hilfinger;
@@ -72,8 +73,6 @@ public partial class ManageARunnerPage : ContentPage, IQueryAttributable
             {
                 RaceEventsLabel.Text = RaceEventsLabel.Text + $"{item.Event.EventType.EventTypeName}\n";
             }
-            
-
 
             var statuses = db.RegistrationStatuses
                 .OrderBy(st => st.RegistrationStatusId)
@@ -110,7 +109,22 @@ public partial class ManageARunnerPage : ContentPage, IQueryAttributable
 
     private async void EditProfile(object sender, EventArgs e)
     {
-        await DisplayAlert("Info", "Feature not implemented yet", "Ok");
+        using (var db = new MarathonDB())
+        {
+            var userToEdit = db.Users
+                .Include(u => u.Runners)
+                .FirstOrDefault(u => u.Email == db.Runners.FirstOrDefault(r => r.RunnerId == runnerId).Email); 
+            ShellNavigationQueryParameters data = new ShellNavigationQueryParameters()
+            {
+                { "User", userToEdit },
+                { "FromManageRunner", true },
+                { "CoordinatorUser", user },
+                { "RunnerId", runnerId },
+                { "StatusId", userStatusId }
+            };
+            await Shell.Current.GoToAsync("EditProfilePage", data);
+        }
+            
     }
 
     private async void PreviewCertificate(object sender, EventArgs e)

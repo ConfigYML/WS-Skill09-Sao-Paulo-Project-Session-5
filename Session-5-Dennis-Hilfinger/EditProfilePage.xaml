@@ -85,6 +85,14 @@
                         x:Name="PasswordAgainEntry"
                         Placeholder="Password"
                         IsPassword="True"/>
+                        <Label
+                            FontSize="20"
+                            Text="Registration status"
+                            x:Name="RegStatusLabel"
+                            IsVisible="False"/>
+                        <Picker
+                            x:Name="RegStatusPicker"
+                            IsVisible="False"/>
                     </VerticalStackLayout>
 
                 </Grid>

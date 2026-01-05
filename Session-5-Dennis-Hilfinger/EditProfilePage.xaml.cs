@@ -9,6 +9,10 @@ public partial class EditProfilePage : ContentPage, IQueryAttributable
 {
     DispatcherTimer timer = new DispatcherTimer();
     User? user;
+    bool FromManageRunner;
+    User coordinatorUser;
+    int ManageRunnerRunnerId;
+    byte ManageRunnerUserStatusId;
     public EditProfilePage()
 	{
 		InitializeComponent();
@@ -37,6 +41,18 @@ public partial class EditProfilePage : ContentPage, IQueryAttributable
     {
         
         user = (User) query["User"];
+        FromManageRunner = (bool)query["FromManageRunner"];
+        if (FromManageRunner == true) {
+            RegStatusLabel.IsVisible = true;
+            RegStatusPicker.IsVisible = true;
+            coordinatorUser = (User) query["CoordinatorUser"];
+            ManageRunnerRunnerId = (int) query["RunnerId"];
+            ManageRunnerUserStatusId = (byte) query["StatusId"];
+        } else
+        {
+            RegStatusLabel.IsVisible = false;
+            RegStatusPicker.IsVisible = false;
+        }
         FillData();
     }
 
@@ -65,6 +81,23 @@ public partial class EditProfilePage : ContentPage, IQueryAttributable
             BirthdatePicker.Date = (DateTime) user.Runners.First().DateOfBirth;
 
             EmailLabel.Text = user.Email;
+
+            var registrationStatusId = db.Runners
+                .Include(r => r.Registrations)
+                .FirstOrDefault(r => r.Email == user.Email)
+                .Registrations.First().RegistrationStatusId;
+            var statuses = db.RegistrationStatuses;
+
+            RegStatusPicker.Items.Add("");
+            foreach(var item in statuses)
+            {
+                string statusString = item.RegistrationStatus1.ToString();
+                RegStatusPicker.Items.Add(statusString);
+                if (item.RegistrationStatusId == registrationStatusId)
+                {
+                    RegStatusPicker.SelectedItem = RegStatusPicker.Items.FirstOrDefault(i => i == statusString);
+                }
+            }
         }
     }
 
@@ -124,6 +157,15 @@ public partial class EditProfilePage : ContentPage, IQueryAttributable
                 return;
             }
             db.Update(user);
+
+            var regEvent = db.Runners
+                .Include(r => r.Registrations)
+                .FirstOrDefault(r => r.Email == user.Email)
+                .Registrations.First();
+            var newStatus = db.RegistrationStatuses.FirstOrDefault(st => st.RegistrationStatus1 == RegStatusPicker.SelectedItem.ToString());
+            regEvent.RegistrationStatus = newStatus;
+            db.Update(regEvent);
+
             db.SaveChanges();
             DisplayAlert("Success", "Profile updated successfully.", "OK");
         }
@@ -177,11 +219,26 @@ public partial class EditProfilePage : ContentPage, IQueryAttributable
 
     private void Cancel(object sender, EventArgs e)
     {
-        ShellNavigationQueryParameters userData = new ShellNavigationQueryParameters()
+        if (FromManageRunner)
         {
-            { "User", user }
-        };
-        AppShell.Current.GoToAsync("RunnerPage", userData);
+            Navigation.RemovePage(this);
+            /*ShellNavigationQueryParameters userData = new ShellNavigationQueryParameters()
+            {
+                { "User", coordinatorUser },
+                { "RunnerId", ManageRunnerRunnerId },
+                { "StatusId", ManageRunnerUserStatusId }
+            };
+            AppShell.Current.GoToAsync("ManageARunnerPage", userData);*/
+        } else
+        {
+            ShellNavigationQueryParameters userData = new ShellNavigationQueryParameters()
+            {
+                { "User", user }
+            };
+            AppShell.Current.GoToAsync("RunnerPage", userData);
+
+        }
+            
     }
 
 }
