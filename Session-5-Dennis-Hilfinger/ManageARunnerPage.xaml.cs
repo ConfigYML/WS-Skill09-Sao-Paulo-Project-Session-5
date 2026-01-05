@@ -10,7 +10,7 @@ public partial class ManageARunnerPage : ContentPage, IQueryAttributable
     DispatcherTimer timer = new DispatcherTimer();
     User user;
     int runnerId;
-    int userStatusId;
+    byte userStatusId;
     public ManageARunnerPage()
 	{
 		InitializeComponent();
@@ -40,7 +40,7 @@ public partial class ManageARunnerPage : ContentPage, IQueryAttributable
     {
         user = (User)query["User"];
         runnerId = (int)query["RunnerId"];
-        userStatusId = (int) query["StatusId"];
+        userStatusId = (byte) query["StatusId"];
         FillData();
     }
 

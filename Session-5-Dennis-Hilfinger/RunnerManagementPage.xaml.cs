@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.UI.Xaml;
+using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Windows.Storage.Pickers;
@@ -14,13 +16,14 @@ public partial class RunnerManagementPage : ContentPage, IQueryAttributable
 {
     DispatcherTimer timer = new DispatcherTimer();
     User user;
-    List<DataDTO> currentRunners = new List<DataDTO>();
+    public ObservableCollection<DataDTO> CurrentRunners { get; set; } = new ObservableCollection<DataDTO>();
     public RunnerManagementPage()
     {
         InitializeComponent();
         timer.Interval = TimeSpan.FromSeconds(1);
         timer.Tick += timerTick;
         timer.Start();
+        this.BindingContext = this;
     }
 
     private void timerTick(object? sender, object e)
@@ -114,8 +117,6 @@ public partial class RunnerManagementPage : ContentPage, IQueryAttributable
                 }
             }
 
-            currentRunners.Clear();
-
             var query = runners.Select(r =>
             new {
                 Runner = r,
@@ -124,11 +125,35 @@ public partial class RunnerManagementPage : ContentPage, IQueryAttributable
             })
                 .Where(r => r.status != null);
 
-            var results = await query.ToListAsync();
-
-            foreach(var res in results)
+            if (SortingPicker.SelectedItem != null)
             {
-                currentRunners.Add(new DataDTO
+                if (SortingPicker.SelectedItem.ToString() != "")
+                {
+                    switch (SortingPicker.SelectedItem.ToString())
+                    {
+                        case "First Name":
+                            query = query.OrderBy(r => r.User.FirstName);
+                            break;
+                        case "Last Name":
+                            query = query.OrderBy(r => r.User.LastName);
+                            break;
+                        case "Email":
+                            query = query.OrderBy(r => r.Runner.Email);
+                            break;
+                        case "Status":
+                            query = query.OrderBy(r => r.status.RegistrationStatus1);
+                            break;
+                    }
+                }
+            }
+
+            CurrentRunners.Clear();
+            var results = await query.ToListAsync();
+            List<DataDTO> fastList = new List<DataDTO>();
+
+            foreach (var res in results)
+            {
+                fastList.Add(new DataDTO
                 {
                     FirstName = res.User?.FirstName,
                     LastName = res.User?.LastName,
@@ -137,28 +162,18 @@ public partial class RunnerManagementPage : ContentPage, IQueryAttributable
                 }); ;
             }
 
-            if (SortingPicker.SelectedItem != null)
+            foreach (var data in fastList)
             {
-                if (SortingPicker.SelectedItem.ToString() != "")
-                {
-                    switch (SortingPicker.SelectedItem.ToString())
-                    {
-                        case "First Name":
-                            currentRunners = currentRunners.OrderBy(r => r.FirstName).ToList();
-                            break;
-                        case "Last Name":
-                            currentRunners = currentRunners.OrderBy(r => r.LastName).ToList();
-                            break;
-                        case "Email":
-                            currentRunners = currentRunners.OrderBy(r => r.runner.Email).ToList();
-                            break;
-                        case "Status":
-                            currentRunners = currentRunners.OrderBy(r => r.status.RegistrationStatus1).ToList();
-                            break;
-                    }
-                }
+                CurrentRunners.Add(data);
             }
-            DisplayRunners();
+
+            var totalRunners = CurrentRunners.Count();
+            TotalRunnersLabel.Text = totalRunners.ToString();
+
+            if (totalRunners == 0)
+            {
+                await DisplayAlert("No runners found", "No runners were found using these criteria", "Ok");
+            }
 
         }
 
@@ -166,6 +181,7 @@ public partial class RunnerManagementPage : ContentPage, IQueryAttributable
 
     private async void DisplayRunners()
     {
+        /*
         ResultsGrid.Children.Clear();
         ResultsGrid.RowDefinitions = new RowDefinitionCollection
         {
@@ -264,18 +280,27 @@ public partial class RunnerManagementPage : ContentPage, IQueryAttributable
                 Grid.SetRow(EditBtn, i + 1);
                 ResultsGrid.Children.Add(EditBtn);
             }
-        }
+        }*/
     }
 
-    private async void EditRunner(object sender, EventArgs e, int runnerId, int? status)
+    private async void EditRunner(object sender, EventArgs e)
     {
-        ShellNavigationQueryParameters userData = new ShellNavigationQueryParameters()
+        var btn = sender as Button;
+        var data = btn.CommandParameter as DataDTO;
+        if (data != null)
         {
-            { "User", user },
-            { "RunnerId", runnerId },
-            { "StatusId", status }
-        };
-        await Shell.Current.GoToAsync("ManageARunnerPage", userData);
+            ShellNavigationQueryParameters userData = new ShellNavigationQueryParameters()
+            {
+                { "User", user },
+                { "RunnerId", data.runner.RunnerId },
+                { "StatusId", data.status.RegistrationStatusId }
+            };
+            await Shell.Current.GoToAsync("ManageARunnerPage", userData);
+        } else
+        {
+            await DisplayAlert("Info", "An error occurred. Please try again later.", "Ok");
+        }
+        
     }
 
     private async void ExportRunnerDetails(object sender, EventArgs e)
@@ -290,7 +315,7 @@ public partial class RunnerManagementPage : ContentPage, IQueryAttributable
         var file = await folder.CreateFileAsync("runnerData.csv", Windows.Storage.CreationCollisionOption.ReplaceExisting);
         using (var stream = await file.OpenStreamForWriteAsync() ) {
             StreamWriter st = new StreamWriter(stream);
-            foreach (var runner in currentRunners)
+            foreach (var runner in CurrentRunners)
             {
                 string eventStr = "";
                 using (var db = new MarathonDB())
@@ -328,7 +353,7 @@ public partial class RunnerManagementPage : ContentPage, IQueryAttributable
         await DisplayAlert("Info", "Functionality not implemented yet", "Ok");
     }
 
-    class DataDTO
+    public class DataDTO
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
