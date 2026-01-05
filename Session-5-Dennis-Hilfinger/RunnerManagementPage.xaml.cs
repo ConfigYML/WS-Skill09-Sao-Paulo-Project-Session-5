@@ -84,7 +84,7 @@ public partial class RunnerManagementPage : ContentPage, IQueryAttributable
         }
     }
 
-    private void Refresh(object? sender, EventArgs e)
+    private async void Refresh(object? sender, EventArgs e)
     {
         using (var db = new MarathonDB())
         {
@@ -92,15 +92,14 @@ public partial class RunnerManagementPage : ContentPage, IQueryAttributable
             .Include(r => r.Registrations)
             .ThenInclude(r => r.RegistrationEvents)
             .Where(r => r.Registrations.Count > 0)
-            .Where(r => r.Registrations.Any(reg => reg.RegistrationEvents.Count > 0))
-            .ToList();
+            .Where(r => r.Registrations.Any(reg => reg.RegistrationEvents.Count > 0));
 
             if (StatusPicker.SelectedItem != null)
             {
                 if (StatusPicker.SelectedItem.ToString() != "")
                 {
                     var statusId = db.RegistrationStatuses.FirstOrDefault(st => st.RegistrationStatus1 == StatusPicker.SelectedItem.ToString()).RegistrationStatusId;
-                    runners = runners.Where(r => r.Registrations.First().RegistrationStatusId == statusId).ToList();
+                    runners = runners.Where(r => r.Registrations.First().RegistrationStatusId == statusId);
                 }
             }
 
@@ -111,28 +110,31 @@ public partial class RunnerManagementPage : ContentPage, IQueryAttributable
                     var events = db.Events
                         .Include(e => e.EventType)
                         .Where(e => e.EventType.EventTypeName == EventTypePicker.SelectedItem.ToString());
-                    runners = runners.Where(r => events.Any(e => e.EventId == r.Registrations.First().RegistrationEvents.First().EventId)).ToList();
+                    runners = runners.Where(r => events.Any(e => e.EventId == r.Registrations.First().RegistrationEvents.First().EventId));
                 }
             }
 
-            var users = db.Users.ToList();
-            var statuses = db.RegistrationStatuses.ToList();
             currentRunners.Clear();
-            foreach (var runner in runners)
-            {
-                var user = users.FirstOrDefault(u => u.Email == runner.Email);
 
-                var status = statuses.FirstOrDefault(st => st.RegistrationStatusId == runner.Registrations.First().RegistrationStatusId);
-                if (status != null)
+            var query = runners.Select(r =>
+            new {
+                Runner = r,
+                User = db.Users.FirstOrDefault(u => u.Email == r.Email),
+                status = db.RegistrationStatuses.FirstOrDefault(st => st.RegistrationStatusId == r.Registrations.First().RegistrationStatusId)
+            })
+                .Where(r => r.status != null);
+
+            var results = await query.ToListAsync();
+
+            foreach(var res in results)
+            {
+                currentRunners.Add(new DataDTO
                 {
-                    currentRunners.Add(new DataDTO
-                    {
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
-                        runner = runner,
-                        status = status
-                    });
-                }
+                    FirstName = res.User?.FirstName,
+                    LastName = res.User?.LastName,
+                    runner = res.Runner,
+                    status = res?.status
+                }); ;
             }
 
             if (SortingPicker.SelectedItem != null)
@@ -217,7 +219,7 @@ public partial class RunnerManagementPage : ContentPage, IQueryAttributable
             Microsoft.Maui.Controls.Application.Current.Resources.TryGetValue("ButtonGreen", out object style);
             var users = db.Users.ToList();
             var statuses = db.RegistrationStatuses.ToList();
-            for (int i = 0; i < currentRunners.Count(); i++)
+            for (int i = 0; i < currentRunners.Count() - 1; i++)
             {
 
                 ResultsGrid.RowDefinitions.Add(new RowDefinition());
@@ -251,7 +253,13 @@ public partial class RunnerManagementPage : ContentPage, IQueryAttributable
                 {
                     EditBtn.Style = (Microsoft.Maui.Controls.Style)style;
                 }
-                EditBtn.Clicked += EditRunner;
+
+                int runnerId = currentRunners[i].runner.RunnerId;
+                int statusId = currentRunners[i].status.RegistrationStatusId;
+                EditBtn.Clicked += (s, e) =>
+                {
+                    EditRunner(null, EventArgs.Empty, runnerId, statusId);
+                };
                 Grid.SetColumn(EditBtn, 4);
                 Grid.SetRow(EditBtn, i + 1);
                 ResultsGrid.Children.Add(EditBtn);
@@ -259,9 +267,15 @@ public partial class RunnerManagementPage : ContentPage, IQueryAttributable
         }
     }
 
-    private async void EditRunner(object sender, EventArgs e)
+    private async void EditRunner(object sender, EventArgs e, int runnerId, int? status)
     {
-        await DisplayAlert("Info", "Feature not implemnted yet", "Ok");
+        ShellNavigationQueryParameters userData = new ShellNavigationQueryParameters()
+        {
+            { "User", user },
+            { "RunnerId", runnerId },
+            { "StatusId", status }
+        };
+        await Shell.Current.GoToAsync("ManageARunnerPage", userData);
     }
 
     private async void ExportRunnerDetails(object sender, EventArgs e)

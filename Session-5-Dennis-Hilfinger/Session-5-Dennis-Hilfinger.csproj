@@ -93,6 +93,8 @@
 	  <None Remove="Resources\Images\marathon\marathon_image.jpg" />
 	  <None Remove="Resources\Images\marathon\marathon_map.jpg" />
 	  <None Remove="Resources\Images\marathon\teatro_municipal.jpg" />
+	  <None Remove="Resources\Images\status_icons\cross_icon.png" />
+	  <None Remove="Resources\Images\status_icons\tick_icon.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -133,6 +135,8 @@
 	  <MauiImage Include="Resources\Images\marathon\marathon_image.jpg" />
 	  <MauiImage Include="Resources\Images\marathon\marathon_map.jpg" />
 	  <MauiImage Include="Resources\Images\marathon\teatro_municipal.jpg" />
+	  <MauiImage Include="Resources\Images\status_icons\cross_icon.png" />
+	  <MauiImage Include="Resources\Images\status_icons\tick_icon.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -154,6 +158,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="AllRaceResultsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="CertificatePreviewPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="CharityInfoPage.xaml">
@@ -184,6 +191,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="LoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="ManageARunnerPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="MarathonLengthPage.xaml">

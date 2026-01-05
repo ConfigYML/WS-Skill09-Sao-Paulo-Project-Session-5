@@ -1,4 +1,4 @@
-# WS-Skill09-Sao-Paulo-Project-Session-4
+# WS-Skill09-Sao-Paulo-Project-Session-5
 
 # Requirements
 
@@ -6,7 +6,7 @@ To start the application a local installation of mssql db is neccessary. If this
 
 # Starting the application
 
-Navigate into the Executable/net9.0-windows10.0.19041.0/win10-x64 folder and double click the 'Session-4-Dennis-Hilfinger.exe' file to start the application.
+Navigate into the Executable/net9.0-windows10.0.19041.0/win10-x64 folder and double click the 'Session-5-Dennis-Hilfinger.exe' file to start the application.
 
 # Timer
 The timer uses the 5th of September 2026 06:00:00 as start time of the event to ensure that the functionality is possible.
@@ -15,3 +15,4 @@ The timer uses the 5th of September 2026 06:00:00 as start time of the event to 
 User with email 'dennish@gmail.com' was added with password 'qwerT1!!'
 
 # Missing functionality
+Sponsorship page, Certificate preview page, Edit profile page are currently missing. Data loading on Manage a runner page does currently not work yet.

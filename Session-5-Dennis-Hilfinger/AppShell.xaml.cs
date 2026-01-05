@@ -25,6 +25,8 @@
             Routing.RegisterRoute(nameof(MarathonLengthPage), typeof(MarathonLengthPage));
             Routing.RegisterRoute(nameof(MySponsorshipPage), typeof(MySponsorshipPage));
             Routing.RegisterRoute(nameof(RunnerManagementPage), typeof(RunnerManagementPage));
+            Routing.RegisterRoute(nameof(ManageARunnerPage), typeof(ManageARunnerPage));
+            Routing.RegisterRoute(nameof(CertificatePreviewPage), typeof(CertificatePreviewPage));
         }
     }
 }
