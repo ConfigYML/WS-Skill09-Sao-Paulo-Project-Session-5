@@ -129,6 +129,10 @@ public partial class ManageARunnerPage : ContentPage, IQueryAttributable
 
     private async void PreviewCertificate(object sender, EventArgs e)
     {
-        await DisplayAlert("Info", "Feature not implemented yet", "Ok");
+        ShellNavigationQueryParameters data = new ShellNavigationQueryParameters()
+        {
+            { "RunnerId", runnerId }
+        };
+        await Shell.Current.GoToAsync("CertificatePreviewPage", data);
     }
 }

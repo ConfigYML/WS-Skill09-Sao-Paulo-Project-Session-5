@@ -135,6 +135,8 @@
 	  <MauiImage Include="Resources\Images\marathon\marathon_image.jpg" />
 	  <MauiImage Include="Resources\Images\marathon\marathon_map.jpg" />
 	  <MauiImage Include="Resources\Images\marathon\teatro_municipal.jpg" />
+	  <MauiImage Include="Resources\Images\marathon_skills_2015\marathon_2014_certificate_seal.png" />
+	  <MauiImage Include="Resources\Images\marathon_skills_2015\marathon_2014_logo.png" />
 	  <MauiImage Include="Resources\Images\status_icons\cross_icon.png" />
 	  <MauiImage Include="Resources\Images\status_icons\tick_icon.png" />
 	</ItemGroup>
@@ -221,6 +223,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="SponsorshipConfirmationPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="SponsorshipOverviewPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

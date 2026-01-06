@@ -203,3 +203,9 @@ build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = Session_5_Dennis_Hilfinger.SponsorshipConfirmationPage.xaml
 build_metadata.AdditionalFiles.TargetPath = SponsorshipConfirmationPage.xaml
 build_metadata.AdditionalFiles.RelativePath = SponsorshipConfirmationPage.xaml
+
+[C:/2_WorldSkills/Training/Sao_Paulo_2015/WS-Skill09-Sao-Paulo-Project-Session-5/Session-5-Dennis-Hilfinger/SponsorshipOverviewPage.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = Session_5_Dennis_Hilfinger.SponsorshipOverviewPage.xaml
+build_metadata.AdditionalFiles.TargetPath = SponsorshipOverviewPage.xaml
+build_metadata.AdditionalFiles.RelativePath = SponsorshipOverviewPage.xaml

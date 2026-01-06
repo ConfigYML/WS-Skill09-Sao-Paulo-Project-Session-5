@@ -509,3 +509,7 @@ C:\2_WorldSkills\Training\Sao_Paulo_2015\WS-Skill09-Sao-Paulo-Project-Session-5\
 C:\2_WorldSkills\Training\Sao_Paulo_2015\WS-Skill09-Sao-Paulo-Project-Session-5\Session-5-Dennis-Hilfinger\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\qualifiers.txt
 C:\2_WorldSkills\Training\Sao_Paulo_2015\WS-Skill09-Sao-Paulo-Project-Session-5\Session-5-Dennis-Hilfinger\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\qualifiers.txt.intermediate
 C:\2_WorldSkills\Training\Sao_Paulo_2015\WS-Skill09-Sao-Paulo-Project-Session-5\Session-5-Dennis-Hilfinger\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\MultipleQualifiersPerDimensionFound.txt
+C:\2_WorldSkills\Training\Sao_Paulo_2015\WS-Skill09-Sao-Paulo-Project-Session-5\Executable\net9.0-windows10.0.19041.0\win10-x64\marathon_2014_certificate_seal.scale-100.png
+C:\2_WorldSkills\Training\Sao_Paulo_2015\WS-Skill09-Sao-Paulo-Project-Session-5\Executable\net9.0-windows10.0.19041.0\win10-x64\marathon_2014_logo.scale-100.png
+C:\2_WorldSkills\Training\Sao_Paulo_2015\WS-Skill09-Sao-Paulo-Project-Session-5\Session-5-Dennis-Hilfinger\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\marathon_2014_certificate_seal.scale-100.png
+C:\2_WorldSkills\Training\Sao_Paulo_2015\WS-Skill09-Sao-Paulo-Project-Session-5\Session-5-Dennis-Hilfinger\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\marathon_2014_logo.scale-100.png

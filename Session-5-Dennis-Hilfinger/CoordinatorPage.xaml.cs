@@ -47,8 +47,7 @@ public partial class CoordinatorPage : ContentPage, IQueryAttributable
 
     public async void Sponsorship(object? sender, EventArgs e)
     {
-        await DisplayAlert("Work in progress", "This feature is not implemented yet", "Ok");
-        //AppShell.Current.GoToAsync("//SponsorshipPage");
+        await AppShell.Current.GoToAsync("SponsorshipOverviewPage");
     }
 
 }

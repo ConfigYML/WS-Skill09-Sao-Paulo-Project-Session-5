@@ -27,6 +27,7 @@
             Routing.RegisterRoute(nameof(RunnerManagementPage), typeof(RunnerManagementPage));
             Routing.RegisterRoute(nameof(ManageARunnerPage), typeof(ManageARunnerPage));
             Routing.RegisterRoute(nameof(CertificatePreviewPage), typeof(CertificatePreviewPage));
+            Routing.RegisterRoute(nameof(SponsorshipOverviewPage), typeof(SponsorshipOverviewPage));
         }
     }
 }
